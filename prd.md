@@ -2,7 +2,7 @@
 
 ## Product Name
 
-**Brand Tournament Platform (working name: ArenaCampaign)**
+**Brand Tournament Platform (working name: oneVone Play)**
 
 ---
 

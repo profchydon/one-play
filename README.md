@@ -1,4 +1,4 @@
-# ArenaCampaign – Brand Tournament Platform MVP
+# oneVone Play – Brand Tournament Platform MVP
 
 Monolith MVP for brand-sponsored esports tournament campaigns. Built with Next.js 14, TypeScript, Prisma, PostgreSQL, and Redis, run via Docker.
 

@@ -16,11 +16,11 @@ Step-by-step guide to run OneVOnePlay (Next.js + PostgreSQL + Redis) locally or 
 1. Go to **AWS Console** → **EC2** → **AMI**
 2. Select the **oneVone AMI** (pre-configured with Docker and dependencies), and click **Launch Instance from AMI**
 3. Choose **instance type** (t2.large or larger)
-4. Configure **storage** if needed (40 GB+ recommended for Docker builds)
+4. Configure **storage** if needed (30 GB+ recommended for Docker builds)
 5. Select or create a **key pair** for SSH
 6. Ensure **Security Group** allows:
    - **Port 22** (SSH)
-   - **Port 3000** (Frontend)
+   - **Port 3000** (App)
    - **Port 5432** (PostgreSQL) – optional; only if you need external DB access
    - **Port 6379** (Redis) – optional; only if you need external Redis access
 7. Launch the instance and note the **public IP**
@@ -39,7 +39,7 @@ ssh -i your-key.pem ubuntu@your-ec2-public-ip
 ## Step 3: Navigate to the Project
 
 ```bash
-cd /var/www
+cd /app
 ```
 
 ## Step 4: Configure Environment

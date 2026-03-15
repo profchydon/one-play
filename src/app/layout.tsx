@@ -6,7 +6,7 @@ import { SessionProvider } from "@/components/session-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ArenaCampaign – Brand Tournament Platform",
+  title: "oneVone Play – Brand Tournament Platform",
   description: "Run branded esports tournaments as marketing campaigns",
 };
 

@@ -12,7 +12,7 @@ export default function LoginPage() {
           {/* <Link href="/" className="flex items-center gap-3 mb-10">
             <img src="/logo.png" alt="OneVOnePlay Logo" className="h-[75px] w-auto object-contain" />
           </Link> */}
-          <h2 className="text-3xl font-bold text-white mb-6">Welcome back to the arena</h2>
+          <h2 className="text-3xl font-bold text-white mb-6">Welcome back to oneVone Play</h2>
           <p className="text-brand-greenLight/80 text-lg">
             Sign in to manage your branded tournament campaigns and connect with the gaming community.
           </p>

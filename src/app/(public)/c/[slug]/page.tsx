@@ -141,7 +141,7 @@ export default async function PublicCampaignPage({
           {/* Right Column: Registration Form */}
           <div className="w-full lg:w-[420px] flex-shrink-0">
             <div className="bg-white rounded-3xl p-8 shadow-2xl text-brand-navy">
-              <h2 className="text-2xl font-bold mb-2">Join the Arena</h2>
+              <h2 className="text-2xl font-bold mb-2">Join oneVone Play</h2>
               <p className="text-gray-500 mb-8 font-medium">
                 {registrationOpen 
                   ? "Secure your spot in the tournament now." 
