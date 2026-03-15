@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth.js
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  password      String?
+  image         String?
+  role          String    @default("PLAYER") // BRAND_ADMIN | PLAYER
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  campaignsAsOwner Campaign[]     @relation("CampaignOwner")
+  registrations   Registration[]
+  matchesAsPlayer1 Match[]       @relation("MatchPlayer1")
+  matchesAsPlayer2 Match[]       @relation("MatchPlayer2")
+  matchesWon       Match[]       @relation("MatchWinner")
+}
+
+model Campaign {
+  id                 String    @id @default(cuid())
+  slug               String    @unique
+  name               String
+  gameTitle          String
+  format             String    // SINGLE_ELIMINATION | DOUBLE_ELIMINATION
+  maxPlayers         Int       @default(256)
+  registrationClosesAt DateTime
+  startsAt           DateTime
+  prizePool          String?   @db.Text
+  status             String    @default("DRAFT") // DRAFT | PUBLISHED | REGISTRATION_CLOSED | BRACKET_LIVE | COMPLETED
+  brandLogo          String?   @db.Text
+  brandColorPrimary  String?   @default("#1a1a2e")
+  brandColorSecondary String?  @default("#16213e")
+  bannerImage        String?   @db.Text
+  ownerId            String
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  owner         User           @relation("CampaignOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  registrations Registration[]
+  matches       Match[]
+}
+
+model Registration {
+  id         String   @id @default(cuid())
+  campaignId String
+  userId     String?
+  username   String
+  email      String
+  country    String
+  gameId     String
+  ageRange   String?
+  platform   String?
+  favoriteGames String? @db.Text
+  createdAt  DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user     User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  matchesAsPlayer1 Match[] @relation("RegistrationPlayer1")
+  matchesAsPlayer2 Match[] @relation("RegistrationPlayer2")
+  matchesWon       Match[] @relation("RegistrationWinner")
+
+  @@unique([campaignId, email])
+  @@index([campaignId])
+}
+
+model Match {
+  id         String   @id @default(cuid())
+  campaignId String
+  round      Int      // 0 = first round, 1 = second, etc.
+  position   Int      // position in round for bracket display
+  player1RegistrationId String?
+  player2RegistrationId String?
+  player1Id  String?
+  player2Id  String?
+  winnerId   String?  // Registration.id or User.id depending on flow
+  winnerRegistrationId String?
+  scorePlayer1 Int?
+  scorePlayer2 Int?
+  status    String   @default("PENDING") // PENDING | REPORTED | CONFIRMED | DISPUTED | ADMIN_SET
+  reportedBy String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  campaign  Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  player1Registration Registration? @relation("RegistrationPlayer1", fields: [player1RegistrationId], references: [id], onDelete: SetNull)
+  player2Registration Registration? @relation("RegistrationPlayer2", fields: [player2RegistrationId], references: [id], onDelete: SetNull)
+  player1   User?        @relation("MatchPlayer1", fields: [player1Id], references: [id], onDelete: SetNull)
+  player2   User?        @relation("MatchPlayer2", fields: [player2Id], references: [id], onDelete: SetNull)
+  winner    User?        @relation("MatchWinner", fields: [winnerId], references: [id], onDelete: SetNull)
+  winnerRegistration Registration? @relation("RegistrationWinner", fields: [winnerRegistrationId], references: [id], onDelete: SetNull)
+
+  @@index([campaignId])
+  @@index([campaignId, round])
+}
