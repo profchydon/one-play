@@ -39,7 +39,7 @@ ssh -i your-key.pem ubuntu@your-ec2-public-ip
 ## Step 3: Navigate to the Project
 
 ```bash
-cd /var/www/my-app
+cd app
 ```
 
 ## Step 4: Configure Environment
